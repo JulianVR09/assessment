@@ -51,4 +51,11 @@ export class UsersService {
 
     return entityDelete;
   }
+
+  async findUserWithPassword(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'name', 'lastName', 'email', 'password', 'phone', 'role']
+    })
+  }
 }
