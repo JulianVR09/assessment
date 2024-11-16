@@ -1,5 +1,5 @@
-import { Appointment } from "src/appointments/entities/appointment.entity";
-import { Role } from "src/common/enums/role.enum";
+import { Appointment } from "../../appointments/entities/appointment.entity";
+import { Role } from "../../common/enums/role.enum";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
