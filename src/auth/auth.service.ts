@@ -32,7 +32,7 @@ export class AuthService {
 
     if(!isMatch) throw new UnauthorizedException(`Invalid password`)
     
-    const accessToken = await this.generateToken(findUser);
+    const accessToken = this.generateToken(findUser);
     return {
       accessToken
     };
@@ -41,4 +41,17 @@ export class AuthService {
   async findAllUsers(): Promise<User[]> {
     return await this.userService.findAllUser();
   }
+
+  async doctorAvailability(id: string): Promise<User> {
+    const user = await this.userService.doctorAvailable(id);
+  
+    if (!user) throw new UnauthorizedException(`User not found`);
+  
+    user.available = user.available ? false : true;
+  
+    await this.userService.update(user.id, user);
+  
+    return user;
+  }
+  
 }

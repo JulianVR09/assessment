@@ -5,6 +5,7 @@ import { Between, Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { DateTime } from 'luxon'
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { ActiveUserInterface } from 'src/common/interface/activeUser.interface';
 
 
 @Injectable()
@@ -25,7 +26,7 @@ export class AppointmentsService {
     })
   }
 
-  async createAppointment(createAppointmentDto: CreateAppointmentDto): Promise<Appointment> {
+  async createAppointment(createAppointmentDto: CreateAppointmentDto, user: ActiveUserInterface): Promise<Appointment> {
     const { doctorId, day, startHour } = createAppointmentDto
 
     const startHourTime = DateTime.fromISO(`${day}T${startHour}`)
@@ -35,17 +36,18 @@ export class AppointmentsService {
 
     if(!appointment) throw new NotFoundException(`The doctor with id ${doctorId} does not exist`)
 
+    if(appointment.available === false) throw new NotFoundException(`The doctor with id ${doctorId} is not available`)
+
     const overlappingAppointments = await this.obtainAppointments(doctorId, day, startHourTime, endHourTime)
 
     if(overlappingAppointments.length > 0) throw new Error('The selected time slot is already taken')
 
-    const newAppointment =({
-      day,
-      startHour: startHourTime.toISO(),
-      endHour: endHourTime.toISO(),
-      doctorId,
-    })
+    const newAppointment = {...createAppointmentDto, startHour: startHourTime.toISO(), endHour: endHourTime.toISO(), user: { id: user.id }}
 
     return await this.appointmentRepository.save(newAppointment)
+  }
+
+  async getAppointmentByUser(user: ActiveUserInterface): Promise<Appointment[]> {
+    return this.appointmentRepository.find({ where: { user: { id: user.id}}})
   }
 }
