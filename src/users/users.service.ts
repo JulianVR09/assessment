@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { BcryptService } from 'src/common/services/bcrypt.service';
+import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -57,5 +58,12 @@ export class UsersService {
       where: { email },
       select: ['id', 'name', 'lastName', 'email', 'password', 'phone', 'role']
     })
+  }
+
+  async doctorAvailable(id: string): Promise<User | null> {
+    const doctor = await this.userRepository.findOne({
+      where: { id, role: Role.DOCTOR }
+    })
+    return doctor;
   }
 }

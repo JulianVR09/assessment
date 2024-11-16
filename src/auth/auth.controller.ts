@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { Auth } from './decorators/auth.decorator';
+import { Auth } from '../common/decorators/auth.decorator';
 import { Role } from 'src/common/enums/role.enum';
 
 @ApiTags('Auth')
@@ -24,5 +24,11 @@ export class AuthController {
   @Get()
   findAllUsers(){
     return this.authService.findAllUsers();
+  }
+
+  @Patch(':id')
+  @Auth(Role.DOCTOR)
+  async updatedDoctorAvailability(@Param('id') id: string){
+    return await this.authService.doctorAvailability(id);
   }
 }
