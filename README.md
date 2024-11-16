@@ -1,73 +1,194 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Backend API - Medical Appointment System
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This is a backend for a medical appointment management system, which includes features such as registration, login, doctor availability, appointment creation by time, and viewing user appointments. The system ensures that appointments are not duplicated, cannot be created when a doctor is unavailable, and allows users to view all their appointments.
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **User Registration**: Allows users to register in the system.
+- **Login**: Allows users to log in to access their functionalities.
+- **Doctor Availability**: Doctors can change their availability status (available/unavailable).
+- **Appointment Creation**: Users can create appointments with available doctors at specific times. The system ensures that no duplicate appointments are made.
+- **View User Appointments**: Users can view all the appointments they have created.
+
+## Requirements
+
+- **Node.js** 16+
+- **MySQL** or any database compatible with TypeORM
+- **NestJS** for backend structure
+- **JWT** for authentication
 
 ## Installation
 
-```bash
-$ npm install
-```
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <directory-name>
+   ```
 
-## Running the app
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```bash
-# development
-$ npm run start
+3. Configure environment variables in the `.env` file:
+   ```env
+   DATABASE_HOST=
+  DATABASE_PORT=
+  DATABASE_USER=
+  DATABASE_PASSWORD=
+  DATABASE_NAME=
+   SECRET=<your-secret>
+   ```
 
-# watch mode
-$ npm run start:dev
+4. Run migrations (if you have any):
+   ```bash
+   npm run migration:run
+   ```
 
-# production mode
-$ npm run start:prod
-```
+5. Start the server:
+   ```bash
+   npm run start:dev
+   ```
 
-## Test
+   This will start the server at `http://localhost:3000`.
 
-```bash
-# unit tests
-$ npm run test
+## Endpoints
 
-# e2e tests
-$ npm run test:e2e
+### User Registration
 
-# test coverage
-$ npm run test:cov
-```
+- **POST /auth/register**
+  
+  Register a new user in the system.
+  
+  **Request Body**:
+  ```json
+  {
+    {
+    "name":"example",
+    "lastName":"example",
+    "phone":"1234567890",
+    "email":"example@gmail.com",
+    "password":"12345678"
+  }
+  }
+  ```
 
-## Support
+  **Response**:
+  ```json
+  {
+    "message": "User registered successfully"
+  }
+  ```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Login
 
-## Stay in touch
+- **POST /auth/login**
+  
+  Log in with the user's credentials and return a JWT token.
+  
+  **Request Body**:
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "password"
+  }
+  ```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  **Response**:
+  ```json
+  {
+    "access_token": "<jwt-token>"
+  }
+  ```
 
-## License
+### Change Doctor Availability
 
-Nest is [MIT licensed](LICENSE).
+- **PATCH /auth/availability/:id**
+  
+  Change the doctor's availability status (true/false).
+  
+  **Parameters**:
+  - `id`: Doctor's ID
+  
+  **Request Body**:
+  ```json
+  {
+    "available": true
+  }
+  ```
+
+  **Response**:
+  ```json
+  {
+    "id": "doctor-id",
+    "available": true
+  }
+  ```
+
+### Create Appointment
+
+- **POST /appointments**
+  
+  Create an appointment for the user with an available doctor at a specific time.
+
+  **Request Body**:
+  ```json
+  {
+    "doctorId": "doctor-id",
+    "date": "2024-11-16T10:00:00Z"
+  }
+  ```
+
+  **Response**:
+  ```json
+  {
+    "message": "Appointment created successfully"
+  }
+  ```
+
+  **Rules**:
+  - The doctor must be available (`available: true`).
+  - The appointment must not overlap with an existing one.
+  - The time must be in ISO 8601 format.
+
+### View User Appointments
+
+- **GET /appointments**
+  
+  Retrieve all appointments for the authenticated user.
+
+  **Response**:
+  ```json
+  [
+    {
+      "id": "appointment-id",
+      "doctorId": "doctor-id",
+      "date": "2024-11-16T10:00:00Z"
+    }
+  ]
+  ```
+
+## Models
+
+### User (User)
+
+- **email**: string
+- **password**: string
+- **role**: 'user' | 'doctor'
+- **available**: boolean (only for doctors)
+  
+### Appointment (Appointment)
+
+- **doctorId**: string
+- **userId**: string
+- **date**: Date
+- **status**: 'pending' | 'confirmed' | 'canceled'
+
+## Notes
+
+- **Authentication**: JWT is used for authentication. The token should be sent in the request headers as `Authorization: Bearer <token>`.
+- **Database Synchronization**: The `synchronize` option is set to `false`. It is recommended to use migrations to avoid issues in production.
+- **Error Handling**: The system will return detailed error messages for invalid data, authentication issues, or database problems.
+
+
