@@ -1,10 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { Auth } from '../common/decorators/auth.decorator';
-import { Role } from 'src/common/enums/role.enum';
+import { Role } from '../common/enums/role.enum';
 
 @ApiTags('Auth')
 @Controller('auth')

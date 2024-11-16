@@ -4,8 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { BcryptService } from 'src/common/services/bcrypt.service';
-import { Role } from 'src/common/enums/role.enum';
+import { BcryptService } from '../common/services/bcrypt.service';
+import { Role } from '../common/enums/role.enum';
 
 @Injectable()
 export class UsersService {

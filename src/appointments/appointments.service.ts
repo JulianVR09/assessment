@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Appointment } from './entities/appointment.entity';
 import { Between, Repository } from 'typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { DateTime } from 'luxon'
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
-import { ActiveUserInterface } from 'src/common/interface/activeUser.interface';
+import { ActiveUserInterface } from '../common/interface/activeUser.interface';
 
 
 @Injectable()
